@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: leads
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required)
+    //   - email: string (required, email format)
+    //   - company: string (required)
+    //   - message: string (required)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidLead(data) {
+      return data.keys().hasAll(['name', 'email', 'company', 'message', 'createdAt']) &&
+             data.keys().hasOnly(['name', 'email', 'company', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             isValidEmail(data.email) &&
+             data.company is string && data.company.size() > 0 && data.company.size() < 100 &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 2000 &&
+             data.createdAt is timestamp;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+             (request.auth.token.email == "ponmuthuramalingam@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    match /leads/{leadId} {
+      // Allow anyone to create a lead (public contact form)
+      allow create: if isValidLead(request.resource.data);
+      
+      // Only admin can read or delete leads
+      allow read, delete: if isAdmin();
+      
+      // Leads are immutable
+      allow update: if false;
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
