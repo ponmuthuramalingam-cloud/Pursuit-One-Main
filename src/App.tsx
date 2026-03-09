@@ -99,7 +99,14 @@ const Navbar = ({ onContactClick }: { onContactClick: () => void }) => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled ? 'bg-black/60 backdrop-blur-2xl border-b border-white/5 py-3' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-black font-black text-xl group-hover:rotate-12 transition-transform duration-500">P</div>
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden group-hover:rotate-12 transition-transform duration-500">
+            <img 
+              src="https://lh3.googleusercontent.com/d/1Uar9WDkx3lxYThfku15zf5Ht5w5gfPDL" 
+              alt="Pursuit-One Logo" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          </div>
           <span className="text-2xl font-bold tracking-tighter text-white">Pursuit-One</span>
         </div>
         <div className="hidden md:flex items-center gap-10">
@@ -449,7 +456,14 @@ const Footer = () => (
   <footer className="bg-black text-white/40 py-20 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 bg-white rounded flex items-center justify-center text-black font-bold text-xs">P</div>
+        <div className="w-6 h-6 bg-white rounded flex items-center justify-center overflow-hidden">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1Uar9WDkx3lxYThfku15zf5Ht5w5gfPDL" 
+            alt="Pursuit-One Logo" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
         <span className="text-white font-bold tracking-tight">Pursuit-One</span>
       </div>
       <div className="flex gap-8 text-xs font-bold uppercase tracking-widest">
