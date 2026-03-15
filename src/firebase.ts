@@ -12,7 +12,24 @@ const firebaseConfig = {
   measurementId: (import.meta as any).env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// Check if we have the minimum required config
+const isConfigValid = firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId;
+
+let app;
+let db: any;
+let auth: any;
+
+if (isConfigValid) {
+  try {
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+  } catch (error) {
+    console.error("Firebase initialization failed:", error);
+  }
+} else {
+  console.warn("Firebase configuration is missing or incomplete. Some features may not work.");
+}
+
+export { db, auth };
 export default app;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import { 
   Users, 
   TrendingUp, 
@@ -36,38 +36,56 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // --- Error Handling ---
-enum OperationType { CREATE = 'create', UPDATE = 'update', DELETE = 'delete', LIST = 'list', GET = 'get', WRITE = 'write' }
-interface ErrorBoundaryProps { children: React.ReactNode }
-interface ErrorBoundaryState { hasError: boolean; error: any }
+const OperationTypeValues = { CREATE: 'create', UPDATE: 'update', DELETE: 'delete', LIST: 'list', GET: 'get', WRITE: 'write' } as const;
+type OperationType = typeof OperationTypeValues[keyof typeof OperationTypeValues];
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+interface ErrorBoundaryProps { children: React.ReactNode }
+interface ErrorBoundaryState { hasError: boolean; error: any; errorInfo: any }
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { hasError: false, error: null, errorInfo: null };
+
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    (this as any).state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: any): ErrorBoundaryState {
+  static getDerivedStateFromError(error: any): Partial<ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
   componentDidCatch(error: any, errorInfo: any) {
     console.error("ErrorBoundary caught an error", error, errorInfo);
+    (this as any).setState({ errorInfo });
   }
 
   render() {
-    if ((this as any).state.hasError) {
+    if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6 text-white text-center">
-          <div className="max-w-md w-full bg-slate-900 rounded-3xl p-8 border border-slate-800">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 p-6 text-white text-center">
+          <div className="max-w-2xl w-full bg-slate-900 rounded-3xl p-8 border border-slate-800 shadow-2xl">
             <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-            <p className="text-white/40 mb-8 text-sm">We encountered an unexpected error. Please try reloading the page.</p>
+            <h2 className="text-2xl font-bold mb-4">Application Error</h2>
+            <p className="text-white/60 mb-6 text-sm">We encountered an unexpected error while rendering the application.</p>
+            
+            <div className="bg-black/50 rounded-xl p-4 mb-8 text-left overflow-auto max-h-48 border border-white/5">
+              <code className="text-xs text-red-400 font-mono block whitespace-pre-wrap">
+                {this.state.error?.toString()}
+              </code>
+              {this.state.errorInfo && (
+                <code className="text-[10px] text-white/30 font-mono block mt-2 whitespace-pre-wrap">
+                  {this.state.errorInfo.componentStack}
+                </code>
+              )}
+            </div>
+
             <button 
               onClick={() => window.location.reload()} 
-              className="w-full bg-indigo-600 hover:bg-indigo-500 py-3 rounded-xl font-bold transition-colors"
+              className="w-full bg-indigo-600 hover:bg-indigo-500 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-indigo-500/20"
             >
               Reload Application
             </button>
@@ -86,7 +104,6 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 }
 
 // --- Components ---
-
 const Navbar = ({ onContactClick }: { onContactClick: () => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -212,35 +229,45 @@ const Hero = ({ onContactClick }: { onContactClick: () => void }) => {
 };
 
 const ScrollStory = () => {
-  const main = useRef(null);
+  const main = useRef<HTMLDivElement>(null);
   
   useGSAP(() => {
+    if (!main.current) return;
+    
     const panels = gsap.utils.toArray(".story-panel");
-    panels.forEach((panel: any, i) => {
-      ScrollTrigger.create({
-        trigger: panel,
-        start: "top top",
-        pin: true,
-        pinSpacing: false,
-        snap: 1,
-      });
-      
-      // Animate content within panels
-      gsap.fromTo(panel.querySelector(".story-content"), 
-        { opacity: 0, y: 50 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 1,
-          scrollTrigger: {
-            trigger: panel,
-            start: "top center",
-            toggleActions: "play reverse play reverse"
-          }
+    
+    // Create a context to ensure proper cleanup
+    const ctx = gsap.context(() => {
+      panels.forEach((panel: any) => {
+        ScrollTrigger.create({
+          trigger: panel,
+          start: "top top",
+          pin: true,
+          pinSpacing: false,
+          snap: 1,
+        });
+        
+        const content = panel.querySelector(".story-content");
+        if (content) {
+          gsap.fromTo(content, 
+            { opacity: 0, y: 50 },
+            { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1,
+              scrollTrigger: {
+                trigger: panel,
+                start: "top center",
+                toggleActions: "play reverse play reverse"
+              }
+            }
+          );
         }
-      );
-    });
-  }, { scope: main });
+      });
+    }, main);
+
+    return () => ctx.revert();
+  }, { scope: main, dependencies: [] });
 
   return (
     <div ref={main} className="bg-black">
@@ -411,8 +438,18 @@ const ContactForm = React.forwardRef<HTMLDivElement>((props, ref) => {
     e.preventDefault();
     setStatus('loading');
     try {
-      await addDoc(collection(db, 'leads'), { ...formData, createdAt: serverTimestamp() });
-      await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+      if (db) {
+        await addDoc(collection(db, 'leads'), { ...formData, createdAt: serverTimestamp() });
+      } else {
+        console.warn("Firestore not initialized, skipping lead capture.");
+      }
+      
+      await fetch('/api/contact', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(formData) 
+      });
+      
       setStatus('success');
       setFormData({ name: '', email: '', company: '', message: '' });
     } catch (error) {
@@ -478,6 +515,7 @@ const Footer = () => (
 
 export default function App() {
   const contactRef = useRef<HTMLDivElement>(null);
+
   const scrollToContact = () => contactRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
