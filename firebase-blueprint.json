@@ -1,23 +1,25 @@
 {
   "entities": {
-    "Lead": {
-      "title": "Lead",
-      "description": "A contact form submission lead.",
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "A contact form submission message.",
       "type": "object",
       "properties": {
-        "name": { "type": "string", "description": "Full name of the lead" },
-        "email": { "type": "string", "format": "email", "description": "Email address of the lead" },
-        "company": { "type": "string", "description": "Company name" },
-        "message": { "type": "string", "description": "Message from the lead" },
+        "name": { "type": "string", "description": "Full name of the visitor" },
+        "email": { "type": "string", "format": "email", "description": "Email address of the visitor" },
+        "phone": { "type": "string", "description": "Phone number (optional)" },
+        "company": { "type": "string", "description": "Company name (optional)" },
+        "message": { "type": "string", "description": "Message from the visitor" },
+        "source": { "type": "string", "description": "Source of the submission", "enum": ["website"] },
         "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of submission" }
       },
-      "required": ["name", "email", "company", "message", "createdAt"]
+      "required": ["name", "email", "message", "source", "createdAt"]
     }
   },
   "firestore": {
-    "/leads/{leadId}": {
-      "schema": "Lead",
-      "description": "Collection of leads from the contact form."
+    "/contact_messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection of contact messages from the website."
     }
   }
 }

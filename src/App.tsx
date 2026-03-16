@@ -431,7 +431,7 @@ const Ecosystem = () => {
 };
 
 const ContactForm = React.forwardRef<HTMLDivElement>((props, ref) => {
-  const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -439,19 +439,22 @@ const ContactForm = React.forwardRef<HTMLDivElement>((props, ref) => {
     setStatus('loading');
     try {
       if (db) {
-        await addDoc(collection(db, 'leads'), { ...formData, createdAt: serverTimestamp() });
+        const submissionData = {
+          ...formData,
+          source: "website",
+          createdAt: serverTimestamp()
+        };
+        // Remove empty optional fields
+        if (!submissionData.phone) delete (submissionData as any).phone;
+        if (!submissionData.company) delete (submissionData as any).company;
+
+        await addDoc(collection(db, 'contact_messages'), submissionData);
       } else {
-        console.warn("Firestore not initialized, skipping lead capture.");
+        console.warn("Firestore not initialized, skipping message capture.");
       }
       
-      await fetch('/api/contact', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify(formData) 
-      });
-      
       setStatus('success');
-      setFormData({ name: '', email: '', company: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', message: '' });
     } catch (error) {
       console.error(error);
       setStatus('error');
@@ -476,7 +479,10 @@ const ContactForm = React.forwardRef<HTMLDivElement>((props, ref) => {
                 <input required type="text" placeholder="Name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                 <input required type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
               </div>
-              <input required type="text" placeholder="Company" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} />
+              <div className="grid md:grid-cols-2 gap-8">
+                <input type="tel" placeholder="Phone (Optional)" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                <input type="text" placeholder="Company (Optional)" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} />
+              </div>
               <textarea required rows={4} placeholder="Message" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all resize-none" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} />
               <button disabled={status === 'loading'} className="w-full bg-white text-black py-5 rounded-full font-bold text-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
                 {status === 'loading' ? <Loader2 className="animate-spin" /> : <>Send Message <ArrowRight size={20} /></>}
@@ -489,7 +495,103 @@ const ContactForm = React.forwardRef<HTMLDivElement>((props, ref) => {
   );
 });
 
-const Footer = () => (
+const PrivacyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            className="bg-slate-900 border border-white/10 rounded-[2.5rem] p-8 md:p-12 max-w-3xl w-full max-h-[80vh] overflow-y-auto custom-scrollbar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Privacy Policy</h2>
+                <p className="text-white/40 text-sm">Last Updated: 16-03-2026</p>
+              </div>
+              <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                <X size={24} className="text-white" />
+              </button>
+            </div>
+            
+            <div className="space-y-8 text-white/60 leading-relaxed">
+              <section>
+                <p>Pursuit-One provides a customer relationship management (CRM) platform that helps businesses manage their social media marketing and customer interactions.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">Information We Collect</h3>
+                <p className="mb-4">When businesses connect their accounts to Pursuit-One, we may access certain information from third-party platforms such as Facebook, Instagram, WhatsApp, LinkedIn, or Google. This may include:</p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Public profile information used for login authentication</li>
+                  <li>Facebook Page information and posts</li>
+                  <li>Comments and engagement data from posts</li>
+                  <li>Advertising campaign performance and insights</li>
+                  <li>Lead information submitted through lead generation forms</li>
+                  <li>Messages received through connected business messaging services such as WhatsApp</li>
+                </ul>
+                <p className="mt-4">This information is only accessed after the user or business administrator explicitly grants permission.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">How We Use the Information</h3>
+                <p className="mb-4">The information collected is used to provide the following services within the Pursuit-One platform:</p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Display social media posts, comments, and engagement activity</li>
+                  <li>Allow businesses to respond to customer comments and messages</li>
+                  <li>Show advertising performance and insights</li>
+                  <li>Retrieve leads generated from advertisements</li>
+                  <li>Help businesses follow up with potential customers</li>
+                  <li>Provide insights and recommendations to improve marketing performance</li>
+                </ul>
+                <p className="mt-4">We only use the data to provide services requested by the business using the platform.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">Data Sharing</h3>
+                <p>Pursuit-One does not sell or share personal data with third parties. Data obtained through third-party platforms is used only to provide services to the business that authorized the connection.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">Data Security</h3>
+                <p>We take reasonable technical and organizational measures to protect the information processed through our platform.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">Data Retention</h3>
+                <p>Data is retained only as long as necessary to provide services to the business using the platform or until the user disconnects their account.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">User Data Deletion</h3>
+                <p className="mb-4">If a user wishes to request deletion of their data, they can contact us at:</p>
+                <p className="font-bold text-indigo-400">Email: support@pursuit-one.com</p>
+                <p className="mt-4">Once a request is received, we will delete the user's data from our systems within a reasonable timeframe.</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-bold text-white mb-4">Contact Us</h3>
+                <p className="mb-4">If you have questions about this Privacy Policy, you can contact us at:</p>
+                <p className="font-bold text-indigo-400">Email: support@pursuit-one.com</p>
+              </section>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Footer = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => (
   <footer className="bg-black text-white/40 py-20 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
       <div className="flex items-center gap-2">
@@ -504,7 +606,7 @@ const Footer = () => (
         <span className="text-white font-bold tracking-tight">Pursuit-One</span>
       </div>
       <div className="flex gap-8 text-xs font-bold uppercase tracking-widest">
-        <a href="#" className="hover:text-white transition-colors">Privacy</a>
+        <button onClick={onPrivacyClick} className="hover:text-white transition-colors">Privacy</button>
         <a href="#" className="hover:text-white transition-colors">Terms</a>
         <a href="#" className="hover:text-white transition-colors">Twitter</a>
       </div>
@@ -515,6 +617,7 @@ const Footer = () => (
 
 export default function App() {
   const contactRef = useRef<HTMLDivElement>(null);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const scrollToContact = () => contactRef.current?.scrollIntoView({ behavior: 'smooth' });
 
@@ -583,7 +686,8 @@ export default function App() {
             </div>
           </section>
         </main>
-        <Footer />
+        <Footer onPrivacyClick={() => setIsPrivacyOpen(true)} />
+        <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
       </div>
     </ErrorBoundary>
   );

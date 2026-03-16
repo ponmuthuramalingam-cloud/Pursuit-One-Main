@@ -5,13 +5,15 @@ service cloud.firestore {
     // Assumed Data Model
     // ===============================================================
     //
-    // Collection: leads
+    // Collection: contact_messages
     // Document ID: auto-generated
     // Fields:
     //   - name: string (required)
     //   - email: string (required, email format)
-    //   - company: string (required)
+    //   - phone: string (optional)
+    //   - company: string (optional)
     //   - message: string (required)
+    //   - source: string (required, enum: ["website"])
     //   - createdAt: timestamp (required)
     //
     // ===============================================================
@@ -27,19 +29,32 @@ service cloud.firestore {
       return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
 
-    function isValidLead(data) {
-      return data.keys().hasAll(['name', 'email', 'company', 'message', 'createdAt']) &&
-             data.keys().hasOnly(['name', 'email', 'company', 'message', 'createdAt']) &&
+    function isValidContactMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'source', 'createdAt']) &&
+             data.keys().hasOnly(['name', 'email', 'phone', 'company', 'message', 'source', 'createdAt']) &&
              data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
              isValidEmail(data.email) &&
-             data.company is string && data.company.size() > 0 && data.company.size() < 100 &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() < 20)) &&
+             (!('company' in data) || (data.company is string && data.company.size() < 100)) &&
              data.message is string && data.message.size() > 0 && data.message.size() < 2000 &&
+             data.source == "website" &&
              data.createdAt is timestamp;
     }
 
     function isAdmin() {
       return isAuthenticated() && 
              (request.auth.token.email == "ponmuthuramalingam@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    match /contact_messages/{messageId} {
+      // Allow anyone to create a message (public contact form)
+      allow create: if isValidContactMessage(request.resource.data);
+      
+      // Only admin can read or delete messages
+      allow read, delete: if isAdmin();
+      
+      // Messages are immutable
+      allow update: if false;
     }
 
     match /leads/{leadId} {

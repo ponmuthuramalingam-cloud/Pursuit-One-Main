@@ -1,8 +1,10 @@
 {
-  "apiKey": "REPLACED_BY_ENV_VAR",
-  "authDomain": "REPLACED_BY_ENV_VAR",
-  "projectId": "REPLACED_BY_ENV_VAR",
-  "storageBucket": "REPLACED_BY_ENV_VAR",
-  "messagingSenderId": "REPLACED_BY_ENV_VAR",
-  "appId": "REPLACED_BY_ENV_VAR"
+  "projectId": "pursuit-one-main",
+  "appId": "1:381707157972:web:b4bd5bd7e9022ee38bd641",
+  "apiKey": "AIzaSyArIyKJEJ2X00MigC-jtNU9dHuCbXGGb90",
+  "authDomain": "pursuit-one-main.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-e7140ddb-0cc2-4bf9-b75b-4fd97d546574",
+  "storageBucket": "pursuit-one-main.firebasestorage.app",
+  "messagingSenderId": "381707157972",
+  "measurementId": ""
 }
