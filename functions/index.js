@@ -10,6 +10,7 @@ const emailPass = defineSecret("pursuit-one_email_pass");
 
 exports.onContactMessageCreated = onDocumentCreated({
   document: "contact_messages/{messageId}",
+  database: "ai-studio-e7140ddb-0cc2-4bf9-b75b-4fd97d546574",
   secrets: [emailPass],
 }, async (event) => {
   const snapshot = event.data;
