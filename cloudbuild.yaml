@@ -21,3 +21,5 @@ steps:
       - '--allow-unauthenticated'
 images:
   - 'gcr.io/$PROJECT_ID/pursuit-one-main'
+options:
+  logging: CLOUD_LOGGING_ONLY
