@@ -23,10 +23,108 @@
     background: transparent;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
   }
+}
+
+@keyframes border-dance {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.crystal-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: transform 0.3s;
+  background: white;
+  color: #0f172a;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  z-index: 0;
+  padding: 1.25rem 3rem;
+}
+.crystal-btn:hover {
+  transform: scale(1.05);
+}
+.crystal-btn::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: conic-gradient(from 0deg, transparent 60%, #3b82f6 70%, #ec4899 85%, #a855f7 100%);
+  animation: border-dance 3s linear infinite;
+  z-index: -2;
+}
+.crystal-btn::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);
+  border-radius: 9999px;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+.crystal-btn:hover::after {
+  background: rgba(255, 255, 255, 0.95);
+}
+.crystal-btn span {
+  z-index: 10;
+  background: linear-gradient(90deg, #3b82f6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.curve-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  background: #f8fafc;
+}
+
+.curve {
+  position: absolute;
+  width: 200vw;
+  height: 200vw;
+  border-radius: 40% 45% 42% 47%;
+  border: 1px solid rgba(139, 92, 246, 0.05);
+  background: linear-gradient(120deg, rgba(59, 130, 246, 0.03), rgba(168, 85, 247, 0.05), rgba(236, 72, 153, 0.03));
+  animation: curve-wave 25s infinite linear;
+}
+.curve:nth-child(1) {
+  top: -100vw;
+  left: -50vw;
+  animation-duration: 35s;
+}
+.curve:nth-child(2) {
+  top: -110vw;
+  left: -30vw;
+  animation-duration: 25s;
+  animation-direction: reverse;
+  opacity: 0.8;
+  border-radius: 45% 42% 47% 40%;
+}
+.curve:nth-child(3) {
+  top: -120vw;
+  left: -70vw;
+  animation-duration: 40s;
+  opacity: 0.6;
+  border-radius: 42% 47% 40% 45%;
+}
+
+@keyframes curve-wave {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
