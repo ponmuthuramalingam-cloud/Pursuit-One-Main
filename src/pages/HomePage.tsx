@@ -20,8 +20,8 @@ import {
   PenTool
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import app, { db } from '../firebase';
+import { collection, addDoc, serverTimestamp, getFirestore, doc, getDoc } from 'firebase/firestore';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -239,6 +239,34 @@ const ConnectSection = () => {
 };
 
 const PricingSection = () => {
+  const [pricingTableId, setPricingTableId] = useState("prctbl_1TOzNtEHKIPSppstXqJui702");
+  const [publishableKey, setPublishableKey] = useState("pk_test_51TMojuEHKIPSppstURuEsKKaJVDAxWNXATHW7poUtLMv4GZL6529O48EKnch8Q6foWV5gWYKArL93ZnNpNjRmjqt00ivbt8QNs");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const configDb = getFirestore(app, 'pursuit-one-main');
+        const docRef = doc(configDb, 'stripe_configs', 'pricing_table');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data['pricing-table-id']) {
+            setPricingTableId(data['pricing-table-id']);
+          }
+          if (data['publishable-key']) {
+            setPublishableKey(data['publishable-key']);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching stripe configurations:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConfig();
+  }, []);
+
   return (
     <section id="pricing" className="py-32 bg-slate-50 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
@@ -249,13 +277,23 @@ const PricingSection = () => {
             Choose the perfect plan to streamline your social media management. Start your <strong>free 7-day trial</strong> today.
           </p>
         </div>
-        <div className="relative z-10 w-full overflow-x-auto pb-10">
-          {/* @ts-ignore */}
-          <stripe-pricing-table 
-            pricing-table-id="prctbl_1TOGkXEHKIPSppstTcoPTwpY"
-            publishable-key="pk_test_51TMojuEHKIPSppstURuEsKKaJVDAxWNXATHW7poUtLMv4GZL6529O48EKnch8Q6foWV5gWYKArL93ZnNpNjRmjqt00ivbt8QNs">
-          {/* @ts-ignore */}
-          </stripe-pricing-table>
+        <div className="relative z-10 w-full overflow-x-auto pb-10 flex justify-center min-h-[400px]">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center p-20">
+              <Loader2 className="animate-spin text-indigo-600 mb-4" size={40} />
+              <span className="text-slate-500 font-medium text-lg">Loading plans...</span>
+            </div>
+          ) : (
+            <div className="w-full">
+              {/* @ts-ignore */}
+              <stripe-pricing-table 
+                key={`${pricingTableId}-${publishableKey}`}
+                pricing-table-id={pricingTableId}
+                publishable-key={publishableKey}>
+              {/* @ts-ignore */}
+              </stripe-pricing-table>
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -321,7 +359,7 @@ const Footer = () => (
       </div>
       <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
         <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-        <a href="#" className="hover:text-white transition-colors">Terms</a>
+        <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
         <a href="#" className="hover:text-white transition-colors">Twitter</a>
       </div>
       <p className="text-sm">© 2026 Pursuit-One. All rights reserved.</p>

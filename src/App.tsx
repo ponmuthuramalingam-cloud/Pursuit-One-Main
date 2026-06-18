@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 
 // --- Error Handling ---
 interface ErrorBoundaryProps { children: React.ReactNode }
@@ -66,6 +67,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           {/* Fallback for SPA routing */}
           <Route path="*" element={<HomePage />} />
         </Routes>
