@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": "20"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build",
+    "gcp-build": "vite build",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist",
@@ -19,7 +20,6 @@
     "@gsap/react": "^2.1.2",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
-    "better-sqlite3": "^12.4.1",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "firebase": "^12.10.0",
