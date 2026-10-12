@@ -12,7 +12,7 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3000;
   const distPath = path.join(__dirname, "dist");
   const indexPath = path.join(distPath, "index.html");
-  const isProduction = process.env.NODE_ENV === "production" || fs.existsSync(distPath);
+  const isProduction = process.env.NODE_ENV === "production";
 
   console.log(`--- Starting Server ---`);
   console.log(`Environment: ${process.env.NODE_ENV || 'not set'}`);

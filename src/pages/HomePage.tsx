@@ -195,14 +195,18 @@ const Hero = ({ onPricingClick }: { onPricingClick: () => void }) => {
         </motion.h1>
         
         {/* Value Proposition Description */}
-        <motion.p 
+        <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.9, delay: 0.35 }} 
-          className="text-lg sm:text-xl md:text-2xl text-slate-900 mb-10 max-w-3xl mx-auto font-semibold leading-relaxed tracking-normal drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+          className="max-w-3xl mx-auto mb-10"
         >
-          The all-in-one command center for Facebook & Instagram scheduling, verified WhatsApp Business marketing broadcasts, automated Meta instant lead capture, predefined ad objectives, and segregated multi-business operations.
-        </motion.p>
+          <div className="bg-white/95 backdrop-blur-xl rounded-2xl px-6 py-5 sm:px-8 sm:py-6 border-2 border-white shadow-xl shadow-indigo-500/10 ring-1 ring-slate-900/10">
+            <p className="text-base sm:text-xl md:text-2xl text-slate-950 font-bold leading-relaxed tracking-normal">
+              The all-in-one command center for <span className="text-blue-600 font-extrabold">Facebook & Instagram</span> scheduling, verified <span className="text-emerald-600 font-extrabold">WhatsApp Business</span> marketing broadcasts, automated <span className="text-violet-600 font-extrabold">Meta instant lead capture</span>, predefined ad objectives, and segregated multi-business operations.
+            </p>
+          </div>
+        </motion.div>
         
         {/* Crystal Button with Shiny Thin Running Light */}
         <motion.div 
@@ -230,18 +234,18 @@ const Hero = ({ onPricingClick }: { onPricingClick: () => void }) => {
           initial={{ opacity: 0 }} 
           animate={{ opacity: 1 }} 
           transition={{ delay: 0.75 }} 
-          className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold"
+          className="flex flex-wrap items-center justify-center gap-3.5 text-xs sm:text-sm font-extrabold"
         >
-          <span className="flex items-center gap-2 bg-white text-slate-900 px-4 py-2 rounded-full border-2 border-emerald-400 shadow-md">
-            <CheckCircle2 size={16} className="text-emerald-500 fill-emerald-100" />
+          <span className="flex items-center gap-2.5 bg-white text-slate-950 px-5 py-2.5 rounded-full border-2 border-emerald-500 shadow-lg shadow-emerald-500/20 ring-2 ring-emerald-100/80 hover:scale-105 transition-all">
+            <CheckCircle2 size={18} className="text-emerald-500 fill-emerald-100 shrink-0" />
             <span>No credit card required to start</span>
           </span>
-          <span className="flex items-center gap-2 bg-white text-slate-900 px-4 py-2 rounded-full border-2 border-indigo-400 shadow-md">
-            <CheckCircle2 size={16} className="text-indigo-600 fill-indigo-100" />
+          <span className="flex items-center gap-2.5 bg-white text-slate-950 px-5 py-2.5 rounded-full border-2 border-indigo-500 shadow-lg shadow-indigo-500/20 ring-2 ring-indigo-100/80 hover:scale-105 transition-all">
+            <CheckCircle2 size={18} className="text-indigo-600 fill-indigo-100 shrink-0" />
             <span>Full access to all 6 core modules</span>
           </span>
-          <span className="flex items-center gap-2 bg-white text-slate-900 px-4 py-2 rounded-full border-2 border-pink-400 shadow-md">
-            <CheckCircle2 size={16} className="text-pink-600 fill-pink-100" />
+          <span className="flex items-center gap-2.5 bg-white text-slate-950 px-5 py-2.5 rounded-full border-2 border-pink-500 shadow-lg shadow-pink-500/20 ring-2 ring-pink-100/80 hover:scale-105 transition-all">
+            <CheckCircle2 size={18} className="text-pink-600 fill-pink-100 shrink-0" />
             <span>Sign up today for 30% off (3 months)</span>
           </span>
         </motion.div>
@@ -251,85 +255,86 @@ const Hero = ({ onPricingClick }: { onPricingClick: () => void }) => {
           initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.9, delay: 0.9 }} 
-          className="mt-14 pt-8 border-t border-slate-300 max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 text-left"
+          className="mt-14 pt-8 border-t-2 border-white/80 max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 text-left"
         >
           {[
             { 
               label: 'Content Hub', 
               desc: 'FB & IG Publishing', 
-              border: 'border-blue-400 hover:border-blue-600',
-              glow: 'hover:shadow-blue-200/80',
-              iconBg: 'bg-blue-600 text-white',
-              badge: 'bg-blue-50 text-blue-900 font-bold',
+              border: 'border-blue-500 hover:border-blue-600',
+              glow: 'shadow-blue-500/20 hover:shadow-blue-500/35',
+              topBar: 'bg-gradient-to-r from-blue-500 to-indigo-600',
+              iconBg: 'bg-blue-600 text-white shadow-blue-500/40',
               dot: 'bg-blue-500',
               icon: '✦'
             },
             { 
               label: 'WhatsApp', 
               desc: 'Official Broadcasts', 
-              border: 'border-emerald-400 hover:border-emerald-600',
-              glow: 'hover:shadow-emerald-200/80',
-              iconBg: 'bg-emerald-600 text-white',
-              badge: 'bg-emerald-50 text-emerald-900 font-bold',
+              border: 'border-emerald-500 hover:border-emerald-600',
+              glow: 'shadow-emerald-500/20 hover:shadow-emerald-500/35',
+              topBar: 'bg-gradient-to-r from-emerald-500 to-teal-500',
+              iconBg: 'bg-emerald-600 text-white shadow-emerald-500/40',
               dot: 'bg-emerald-500',
               icon: '💬'
             },
             { 
               label: 'Lead Capture', 
               desc: 'Instant Form Sync', 
-              border: 'border-violet-400 hover:border-violet-600',
-              glow: 'hover:shadow-violet-200/80',
-              iconBg: 'bg-violet-600 text-white',
-              badge: 'bg-violet-50 text-violet-900 font-bold',
+              border: 'border-violet-500 hover:border-violet-600',
+              glow: 'shadow-violet-500/20 hover:shadow-violet-500/35',
+              topBar: 'bg-gradient-to-r from-violet-500 to-purple-600',
+              iconBg: 'bg-violet-600 text-white shadow-violet-500/40',
               dot: 'bg-violet-500',
               icon: '⚡'
             },
             { 
               label: '8 Goals', 
               desc: 'Predefined Campaigns', 
-              border: 'border-amber-400 hover:border-amber-600',
-              glow: 'hover:shadow-amber-200/80',
-              iconBg: 'bg-amber-500 text-white',
-              badge: 'bg-amber-50 text-amber-900 font-bold',
+              border: 'border-amber-500 hover:border-amber-600',
+              glow: 'shadow-amber-500/20 hover:shadow-amber-500/35',
+              topBar: 'bg-gradient-to-r from-amber-500 to-orange-500',
+              iconBg: 'bg-amber-500 text-white shadow-amber-500/40',
               dot: 'bg-amber-500',
               icon: '🎯'
             },
             { 
               label: 'Multi-Business', 
               desc: 'Strict Segregation', 
-              border: 'border-cyan-400 hover:border-cyan-600',
-              glow: 'hover:shadow-cyan-200/80',
-              iconBg: 'bg-cyan-600 text-white',
-              badge: 'bg-cyan-50 text-cyan-900 font-bold',
+              border: 'border-cyan-500 hover:border-cyan-600',
+              glow: 'shadow-cyan-500/20 hover:shadow-cyan-500/35',
+              topBar: 'bg-gradient-to-r from-cyan-500 to-blue-500',
+              iconBg: 'bg-cyan-600 text-white shadow-cyan-500/40',
               dot: 'bg-cyan-500',
               icon: '🏢'
             },
             { 
               label: 'Agency Hub', 
               desc: 'Staff Audit & Calendar', 
-              border: 'border-rose-400 hover:border-rose-600',
-              glow: 'hover:shadow-rose-200/80',
-              iconBg: 'bg-rose-600 text-white',
-              badge: 'bg-rose-50 text-rose-900 font-bold',
+              border: 'border-rose-500 hover:border-rose-600',
+              glow: 'shadow-rose-500/20 hover:shadow-rose-500/35',
+              topBar: 'bg-gradient-to-r from-rose-500 to-pink-600',
+              iconBg: 'bg-rose-600 text-white shadow-rose-500/40',
               dot: 'bg-rose-500',
               icon: '👥'
             },
           ].map((item, idx) => (
             <div 
               key={idx} 
-              className={`group bg-white border-2 ${item.border} rounded-2xl p-4 shadow-md hover:shadow-xl ${item.glow} transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between`}
+              className={`group bg-white border-2 ${item.border} rounded-2xl p-4 sm:p-4.5 shadow-xl ${item.glow} hover:shadow-2xl transition-all duration-200 hover:-translate-y-1.5 flex flex-col justify-between ring-2 ring-white/90 relative overflow-hidden`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold ${item.iconBg} shadow-sm group-hover:scale-110 transition-transform`}>
+              <div className={`absolute top-0 left-0 right-0 h-1.5 ${item.topBar}`} />
+              <div className="flex items-center justify-between mb-3 pt-1">
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-base font-black ${item.iconBg} shadow-md group-hover:scale-110 transition-transform`}>
                   {item.icon}
                 </span>
                 <span className={`w-2.5 h-2.5 rounded-full ${item.dot} ring-4 ring-slate-100 group-hover:scale-125 transition-transform`} />
               </div>
               <div>
-                <span className="text-[13px] font-extrabold text-slate-900 block truncate leading-snug">
+                <span className="text-[14px] font-black text-slate-950 block truncate leading-snug">
                   {item.label}
                 </span>
-                <span className="text-xs text-slate-700 font-semibold block truncate mt-1">
+                <span className="text-xs text-slate-800 font-bold block truncate mt-1">
                   {item.desc}
                 </span>
               </div>
@@ -1133,7 +1138,7 @@ const PricingSection = ({ onContactClick }: { onContactClick: () => void }) => {
                 <ArrowRight size={18} />
               </button>
               <p className="text-center text-[11px] text-white/50 mt-3 font-medium">
-                Our agency specialist responds in under 15 minutes
+                Our agency specialist responds in next 48hrs
               </p>
             </div>
           </div>
@@ -1238,7 +1243,7 @@ const ContactForm = React.forwardRef<HTMLDivElement, { initialPlan?: string }>((
                 Your message has been emailed directly to <strong className="text-indigo-600">support@pursuit-one.com</strong>.
               </p>
               <p className="text-slate-500 mb-6 text-xs font-medium">
-                Our support and onboarding team will activate your workspace and reach out within 15 minutes.
+                Our support and onboarding team will activate your workspace and reach out in next 48hrs.
               </p>
               <button 
                 onClick={() => setStatus('idle')} 

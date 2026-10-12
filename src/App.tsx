@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import HomePage from './pages/HomePage';
@@ -61,6 +61,22 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export default function App() {
+  useEffect(() => {
+    // Dynamic favicon enforcement to ensure tab icon updates reliably
+    try {
+      let iconLink = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+      if (!iconLink) {
+        iconLink = document.createElement('link');
+        iconLink.rel = 'icon';
+        document.head.appendChild(iconLink);
+      }
+      iconLink.type = 'image/png';
+      iconLink.href = `/favicon-32x32.png?v=3`;
+    } catch (e) {
+      console.warn('Favicon enforcement note:', e);
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
       <Router>
