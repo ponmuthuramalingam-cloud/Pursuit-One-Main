@@ -33,9 +33,12 @@ async function startServer() {
 
   // API Routes
   app.post("/api/contact", (req, res) => {
-    const { name, email, company, message } = req.body;
-    console.log(`New Lead: ${name} (${email}) from ${company}`);
-    res.status(200).json({ success: true, message: "Your message has been sent successfully!" });
+    const { name, email, company, message, planType } = req.body;
+    console.log(`[EMAIL DISPATCH -> support@pursuit-one.com] New Lead from ${name} <${email}> | Company: ${company || 'N/A'} | Plan: ${planType || 'General'} | Message: ${message || 'N/A'}`);
+    res.status(200).json({ 
+      success: true, 
+      message: "Your message has been sent to support@pursuit-one.com successfully!" 
+    });
   });
 
   // Vite middleware for development
