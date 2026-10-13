@@ -45,7 +45,10 @@ async function startServer() {
   if (!isProduction) {
     console.log("Starting in DEVELOPMENT mode (Vite middleware)");
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { 
+        middlewareMode: true,
+        hmr: false,
+      },
       appType: "spa",
     });
     app.use(vite.middlewares);

@@ -3,24 +3,113 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Suppress dev WebSocket / HMR disconnection warnings in iframe preview
+      window.addEventListener('unhandledrejection', function(event) {
+        var msg = (event && event.reason && (event.reason.message || event.reason.stack || '')) + '';
+        if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('vite:ws') !== -1 || msg.indexOf('@vite/client') !== -1) {
+          event.preventDefault();
+        }
+      });
+    </script>
     <meta name="facebook-domain-verification" content="6xjikg6myjvxaid6zv665mw11khpld" />
     <title>Pursuit-One: The Smarter Way to Grow</title>
     <meta name="description" content="Unified social media management, WhatsApp business messaging, instant lead capture, and multi-business agency platform." />
+    <link rel="canonical" href="https://pursuit-one.com/" />
+    
+    <!-- OpenGraph & Social Metadata -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pursuit-one.com/" />
+    <meta property="og:site_name" content="Pursuit-One" />
     <meta property="og:title" content="Pursuit-One: The Smarter Way to Grow" />
     <meta property="og:description" content="Unified social media management, WhatsApp business messaging, instant lead capture, and multi-business agency platform." />
-    <meta property="og:image" content="/pursuit-one-logo.png" />
+    <meta property="og:image" content="https://pursuit-one.com/pursuit-one-logo.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Pursuit-One Logo" />
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pursuit-One: The Smarter Way to Grow" />
+    <meta name="twitter:description" content="Unified social media management, WhatsApp business messaging, instant lead capture, and multi-business agency platform." />
+    <meta name="twitter:image" content="https://pursuit-one.com/pursuit-one-logo.png" />
     
-    <!-- Pursuit-One Favicon & Brand Icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png?v=3" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
-    <link rel="shortcut icon" href="/favicon.ico?v=3" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+    <!-- Pursuit-One Favicon & Brand Icons (Standard & Google Search 48px Multiple) -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#27336a" />
     <meta name="msapplication-TileColor" content="#27336a" />
+
+    <!-- Schema.org Structured Data (Google Knowledge Graph & About the Source) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://pursuit-one.com/#organization",
+          "name": "Pursuit-One",
+          "alternateName": ["Pursuit-One Platform", "Pursuit One"],
+          "url": "https://pursuit-one.com",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://pursuit-one.com/#logo",
+            "url": "https://pursuit-one.com/pursuit-one-logo.png",
+            "contentUrl": "https://pursuit-one.com/pursuit-one-logo.png",
+            "caption": "Pursuit-One Logo",
+            "width": 512,
+            "height": 512
+          },
+          "image": "https://pursuit-one.com/pursuit-one-logo.png",
+          "description": "Pursuit-One is the all-in-one command center for Facebook & Instagram scheduling, verified WhatsApp Business marketing broadcasts, automated Meta instant lead capture, predefined ad objectives, and segregated multi-business operations.",
+          "email": "support@pursuit-one.com",
+          "sameAs": [
+            "https://www.linkedin.com/company/pursuit-one",
+            "https://www.facebook.com/profile.php?id=61594253745392"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "support@pursuit-one.com",
+            "contactType": "customer support",
+            "availableLanguage": ["English"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://pursuit-one.com/#website",
+          "url": "https://pursuit-one.com",
+          "name": "Pursuit-One",
+          "description": "Unified social media management, WhatsApp business messaging, instant lead capture, and multi-business agency platform.",
+          "publisher": {
+            "@id": "https://pursuit-one.com/#organization"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://pursuit-one.com/#software",
+          "name": "Pursuit-One",
+          "operatingSystem": "All (Web-based)",
+          "applicationCategory": "BusinessApplication",
+          "description": "Unified social media management, WhatsApp business messaging broadcasts, and automated Meta lead capture platform.",
+          "url": "https://pursuit-one.com",
+          "offers": {
+            "@type": "Offer",
+            "price": "24.50",
+            "priceCurrency": "USD",
+            "description": "Monthly subscription with 30% discount for first 3 months and 7-day free trial."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

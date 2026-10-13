@@ -32,7 +32,9 @@ import {
   Eye,
   Settings,
   HelpCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Linkedin,
+  Facebook
 } from 'lucide-react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import app, { db } from '../firebase';
@@ -1351,11 +1353,31 @@ const Footer = () => (
           <span className="text-[10px] text-white/40">Social Media &amp; Agency Operations</span>
         </div>
       </div>
-      <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
+      <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-bold uppercase tracking-widest text-white/60">
         <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
         <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
         <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
         <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+      </div>
+      <div className="flex items-center gap-3">
+        <a 
+          href="https://www.linkedin.com/company/pursuit-one" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          aria-label="Pursuit-One on LinkedIn"
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/40 flex items-center justify-center text-white/70 hover:text-white transition-all shadow-sm"
+        >
+          <Linkedin size={17} />
+        </a>
+        <a 
+          href="https://www.facebook.com/profile.php?id=61594253745392" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          aria-label="Pursuit-One on Facebook"
+          className="w-9 h-9 rounded-xl bg-white/5 hover:bg-blue-600/20 border border-white/10 hover:border-blue-500/40 flex items-center justify-center text-white/70 hover:text-white transition-all shadow-sm"
+        >
+          <Facebook size={17} />
+        </a>
       </div>
       <p className="text-xs text-white/40 font-medium">© 2026 Pursuit-One. All rights reserved.</p>
     </div>
